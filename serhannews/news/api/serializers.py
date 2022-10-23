@@ -13,7 +13,7 @@ class ArticleSerializer(serializers.Serializer):
     release_date = serializers.DateField()
     active = serializers.BooleanField()
     create_date = serializers.DateTimeField(read_only=True)
-    update_date = serializers.DateTimeField(ready_only=True)
+    update_date = serializers.DateTimeField(read_only=True)
 
     def create(self, validated_data):
         print(validated_data)
