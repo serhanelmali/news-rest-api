@@ -31,8 +31,8 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 class JournalistSerializer(serializers.ModelSerializer):
 
-    articles = ArticleSerializer(many=True, read_only=True)
-
+    #articles = ArticleSerializer(many=True, read_only=True)
+    articles = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name="article-detail",)
     class Meta:
         model = Journalist
         fields = '__all__'

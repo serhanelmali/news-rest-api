@@ -12,7 +12,7 @@ from rest_framework.generics import get_object_or_404
 class JournalistListCreateApiView(APIView):
     def get(self, request):
         journalist = Journalist.objects.all()
-        serializer = JournalistSerializer(journalist, many=True)
+        serializer = JournalistSerializer(journalist, many=True, context={'request':request})
         return Response(serializer.data)
 
     def post(self,request):
