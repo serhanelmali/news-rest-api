@@ -1,11 +1,16 @@
 from rest_framework import serializers
-from news.models import Article
+from news.models import Article, Journalist
 
 from datetime import datetime
 from django.utils.timesince import timesince
 
+
+
 class ArticleSerializer(serializers.ModelSerializer):
     time_since_release = serializers.SerializerMethodField()
+    # author = serializers.StringRelatedField() 
+    # author = JournalistSerializer()
+
     class Meta:
         model = Article
         fields = '__all__'
@@ -23,31 +28,11 @@ class ArticleSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Release date can't be future!")
         return value
 
-    def create(self, validated_data):
-        print(validated_data)
-        return Article.objects.create(**validated_data)
 
-    def update(self, instance, validated_data):
-        instance.author = validated_data.get('author', instance.author)
-        instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.description)
-        instance.text = validated_data.get('text', instance.text)
-        instance.city = validated_data.get('city', instance.city)
-        instance.release_date = validated_data.get('release_date', instance.release_date)
-        instance.active = validated_data.get('active', instance.active)
-        instance.save()
-        return instance
+class JournalistSerializer(serializers.ModelSerializer):
 
-    def validate(self, data):
-        if data['title'] == data['description']:
-            raise serializers.ValidationError(
-                'Title and description can not be same.'
-            )
-        return data
+    articles = ArticleSerializer(many=True, read_only=True)
 
-    def validate(self, value):
-        if len(value) < 20:
-            raise serializers.ValidationError(
-                'Title must be 20 characters length minimum.'
-            )
-        return value
+    class Meta:
+        model = Journalist
+        fields = '__all__'
